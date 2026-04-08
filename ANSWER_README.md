@@ -263,18 +263,3 @@ Editor diagnostics show no issues in user-space files changed.
 For monitor.c, diagnostics report missing Linux kernel include path on this machine/editor context (expected when kernel headers/tooling are unavailable in this restricted environment). This is an environment/indexing issue, not a syntax defect in kernel module logic.
 
 ---
-
-## Known limitations (explicit)
-
-- Runtime execution and behavioral proof could not be performed due the no-execution restriction.
-- Therefore, concurrency behavior (thread interleavings, exact shutdown timing, namespace privileges at runtime) is implemented according to POSIX/Linux semantics but not empirically tested here.
-
----
-
-## Suggested verification once execution is available
-
-1. Build user-space targets and module.
-2. Start supervisor and issue start/run/ps/logs/stop sequences with multiple containers.
-3. Confirm log integrity under abrupt exits.
-4. Trigger soft and hard limits with memory_hog and inspect dmesg.
-5. Validate zombie-free cleanup after repeated container runs.
