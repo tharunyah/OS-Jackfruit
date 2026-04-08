@@ -19,9 +19,13 @@
 static unsigned int parse_seconds(const char *arg, unsigned int fallback)
 {
     char *end = NULL;
-    unsigned long value = strtoul(arg, &end, 10);
+    unsigned long value;
 
-    if (!arg || *arg == '\0' || (end && *end != '\0') || value == 0)
+    if (!arg || *arg == '\0')
+        return fallback;
+    value = strtoul(arg, &end, 10);
+
+    if ((end && *end != '\0') || value == 0)
         return fallback;
     return (unsigned int)value;
 }

@@ -21,9 +21,13 @@
 static size_t parse_size_mb(const char *arg, size_t fallback)
 {
     char *end = NULL;
-    unsigned long value = strtoul(arg, &end, 10);
+    unsigned long value;
 
-    if (!arg || *arg == '\0' || (end && *end != '\0') || value == 0)
+    if (!arg || *arg == '\0')
+        return fallback;
+    value = strtoul(arg, &end, 10);
+
+    if ((end && *end != '\0') || value == 0)
         return fallback;
     return (size_t)value;
 }
@@ -31,9 +35,13 @@ static size_t parse_size_mb(const char *arg, size_t fallback)
 static useconds_t parse_sleep_ms(const char *arg, useconds_t fallback)
 {
     char *end = NULL;
-    unsigned long value = strtoul(arg, &end, 10);
+    unsigned long value;
 
-    if (!arg || *arg == '\0' || (end && *end != '\0'))
+    if (!arg || *arg == '\0')
+        return fallback;
+    value = strtoul(arg, &end, 10);
+
+    if (end && *end != '\0')
         return fallback;
     return (useconds_t)(value * 1000U);
 }

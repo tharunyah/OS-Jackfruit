@@ -25,9 +25,13 @@
 static unsigned int parse_uint(const char *arg, unsigned int fallback)
 {
     char *end = NULL;
-    unsigned long value = strtoul(arg, &end, 10);
+    unsigned long value;
 
-    if (!arg || *arg == '\0' || (end && *end != '\0') || value == 0)
+    if (!arg || *arg == '\0')
+        return fallback;
+    value = strtoul(arg, &end, 10);
+
+    if ((end && *end != '\0') || value == 0)
         return fallback;
     return (unsigned int)value;
 }
@@ -48,8 +52,16 @@ int main(int argc, char *argv[])
     for (i = 0; i < iterations; i++) {
         char line[128];
         int len = snprintf(line, sizeof(line), "io_pulse iteration=%u\n", i + 1);
+        ssize_t written;
 
-        if (write(fd, line, (size_t)len) != len) {
+        if (len < 0 || (size_t)len >= sizeof(line)) {
+            fprintf(stderr, "snprintf failed\n");
+            close(fd);
+            return 1;
+        }
+
+        written = write(fd, line, (size_t)len);
+        if (written != (ssize_t)len) {
             perror("write");
             close(fd);
             return 1;
